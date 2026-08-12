@@ -1,0 +1,30 @@
+{
+  "name": "namesolver",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "A deterministic, evidence-aware Taiwanese name constraint solver.",
+  "dependencies": {
+    "next": "^16.3.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "zod": "^3.24.4"
+  },
+  "scripts": {
+    "build": "node ./node_modules/typescript/bin/tsc --noEmit",
+    "dev": "node ./node_modules/next/dist/bin/next dev apps/web --webpack",
+    "web:build": "node ./node_modules/next/dist/bin/next build apps/web --turbopack",
+    "pipeline:fixture": "node --experimental-strip-types packages/data-pipeline/src/cli.ts",
+    "crawl:cns": "node --experimental-strip-types packages/data-pipeline/src/crawl-cli.ts",
+    "test": "node ./node_modules/vitest/vitest.mjs run",
+    "test:watch": "node ./node_modules/vitest/vitest.mjs"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.0",
+    "fast-check": "^4.2.0",
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.4"
+  }
+}

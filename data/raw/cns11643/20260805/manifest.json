@@ -1,0 +1,37 @@
+{
+  "sourceId": "cns11643",
+  "sourceUrl": "https://data.gov.tw/dataset/5961/",
+  "version": "20260805",
+  "downloadedAt": "2026-08-12T16:50:37.714Z",
+  "license": "政府資料開放授權條款-第1版 / OFL-1.1",
+  "resources": [
+    {
+      "filename": "release.txt",
+      "url": "https://www.cns11643.gov.tw/opendata/release.txt",
+      "bytes": 3051,
+      "checksum": "7fbda49386bf10790ab8dfda0b5df9c982482380e5dcc20d7b13b021d3988fae",
+      "contentType": "text/plain"
+    },
+    {
+      "filename": "Properties.zip",
+      "url": "https://www.cns11643.gov.tw/opendata/Properties.zip",
+      "bytes": 3158491,
+      "checksum": "3d56ef14cc8099893245dac58fe4718d2fa64812b9159352a98a4588ad3efa5c",
+      "contentType": "application/zip"
+    },
+    {
+      "filename": "MapingTables.zip",
+      "url": "https://www.cns11643.gov.tw/opendata/MapingTables.zip",
+      "bytes": 809868,
+      "checksum": "4502fcf7b433d679dee51127298929543ec7f4aa99be93cd219df1552bc3d2bf",
+      "contentType": "application/zip"
+    },
+    {
+      "filename": "OpenDataFilesList.csv",
+      "url": "https://www.cns11643.gov.tw/opendata/OpenDataFilesList.csv",
+      "bytes": 4324,
+      "checksum": "7c967a6c5e12eb6bf29dc4cee6a9fa5591e3d441f1513d16ce9a4b7c53feb6e1",
+      "contentType": "text/csv"
+    }
+  ]
+}

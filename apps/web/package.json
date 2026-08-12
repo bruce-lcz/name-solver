@@ -1,0 +1,11 @@
+{
+  "name": "@namesolver/web",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@namesolver/domain": "workspace:*",
+    "@namesolver/solver": "workspace:*",
+    "zod": "^3.24.4"
+  }
+}

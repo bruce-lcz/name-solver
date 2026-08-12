@@ -1,0 +1,7 @@
+{
+  "datasetVersion": "fixtures-1.0.0",
+  "cases": [
+    {"id":"water-earth-14","surname":"陳","expectedNames":["陳沐安"],"constraints":{"schemaVersion":1,"surname":"陳","givenNameLength":2,"positions":[{"strokeSystem":"kangxi","strokes":{"values":[8]},"element":{"school":"radical","values":["water"]}},{"strokeSystem":"kangxi","strokes":{"values":[6]},"element":{"school":"radical","values":["earth"]}}],"totalStrokes":{"values":[14]}}},
+    {"id":"wood-modern","surname":"林","expectedNames":["林梓晴"],"constraints":{"schemaVersion":1,"surname":"林","givenNameLength":2,"positions":[{"strokeSystem":"kangxi","element":{"school":"radical","values":["wood"]}},{"strokeSystem":"kangxi","strokes":{"values":[12]},"element":{"school":"radical","values":["fire"]}}],"preferences":{"styles":["modern"],"avoidNegativeHomophones":false,"avoidDifficultCharacters":true}}}
+  ]
+}
