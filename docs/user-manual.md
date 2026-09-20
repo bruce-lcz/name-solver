@@ -1,13 +1,15 @@
-# NameSolver 使用手冊（目前垂直切片）
+# NameSolver 使用手冊（完整字庫探索版）
 
 版本：0.1.0  
-適用日期：2026-08-13
+適用日期：2026-09-20
 
 ## 1. 目前可以做什麼
 
-NameSolver 目前提供 TypeScript 函式，依輸入的候選字資料與 `constraints.v1` 條件，產生所有通過 hard constraints 的姓名候選。
+NameSolver 提供可操作的 Next.js 網站與 `/api/v1/solve` API，使用 CNS11643 版本化字庫，依 `constraints.v1` 條件探索姓名候選。
 
-現階段適合開發與規則驗證，尚未提供可操作的網站畫面或可直接啟動的 HTTP 服務。`POST /api/v1/solve` 目前是 framework-neutral route core，需由程式直接呼叫。
+網站可從名字第 1、2、3 字任一位置開始探索。固定某個字後，另一個位置會重新列出所有可搭配字；固定字可以解除。候選池採分頁，推薦排序不會刪除低分合法組合。
+
+正式網站字庫為 CNS11643 20260805 的 76,930 個標準 Unicode CJK 漢字。私用區外字暫不納入。CNS 沒有提供康熙筆畫、五行、字義與風格資料；未設定相關條件時字仍可探索，設定後缺資料的字會另列「待確認字池」。
 
 可用條件包括：
 
@@ -31,8 +33,10 @@ npm run build
 ```
 
 - `npm test` 執行 Vitest 測試。
-- `npm run build` 執行 TypeScript 型別檢查，不會產生部署檔。
-- 目前沒有 `npm run dev`，也沒有可啟動的前端網站。
+- `npm run build` 執行 TypeScript 型別檢查。
+- `npm run web:build` 建立 Next.js production bundle。
+- `npm run dev` 啟動網站與 API。
+- `npm run pipeline:cns` 從本機 CNS snapshot 產出版本化字庫與匯入報告。
 
 ## 3. 基本用法
 
@@ -82,7 +86,7 @@ const response = solve(
 console.log(response.results);
 ```
 
-第三個參數是最多回傳筆數，預設為 50。現版尚未驗證此參數，呼叫端應傳入大於 0 的整數。
+第三個參數是最多回傳筆數，預設為 50。大型正式字庫不會建立完整笛卡兒陣列；API 以 `offset`／`nextCursor` 分頁。
 
 上述範例會產生「陳沐安」。請注意，目前 `totalStrokes: 14` 只計算「沐」與「安」，不包含姓氏「陳」。
 
@@ -169,11 +173,11 @@ console.log(response.results);
 | `char` | 是 | 恰好一個漢字。 |
 | `strokes` | 否 | `kangxi`、`modern` 對應正整數；預設空物件。 |
 | `elements` | 否 | `radical`、`numerology` 對應五行；預設空物件。 |
-| `rarityBand` | 否 | `common`、`uncommon` 或 `rare`；預設 `common`。 |
-| `inputDifficulty` | 否 | 0～1；預設 0。現版不影響排序。 |
+| `rarityBand` | 否 | `common`、`uncommon` 或 `rare`；缺資料時保持未知。 |
+| `inputDifficulty` | 否 | 0～1；缺資料時保持未知。 |
 | `tags` | 否 | 字串陣列；預設空陣列。現版不影響排序。 |
 
-若某位置設定筆畫或五行條件，而該字缺少相同系統／流派的資料，該字會被排除。
+若某位置設定筆畫或五行條件，而該字缺少相同系統／流派的資料，該字不會冒充符合結果，會進入回應的 `pendingPools`。
 
 ## 6. 回傳結果
 
@@ -208,7 +212,7 @@ console.log(response.results);
 - `inputCharacters`：輸入候選字筆數。
 - `positionCandidates`：各位置通過位置級條件的候選數。
 - `combinations`：位置候選的笛卡兒組合數。
-- `hardConstraintMatches`：目前實作等於本次回傳結果數，會受 `limit` 影響。
+- `hardConstraintMatches`：完整可確認命中數，不受目前頁面的 `limit` 影響。
 - `rejectedByRule`：各位置篩選與總筆畫篩選的拒絕次數；同一字可能同時記入多個原因。
 
 可能的拒絕原因：
@@ -257,13 +261,13 @@ Constraint 或 Character 的 Zod 驗證失敗時，回傳：
 }
 ```
 
-這不是實際 HTTP 呼叫方式；目前不能用 `curl` 直接呼叫它。
+網站啟動後可直接以 HTTP 呼叫 `POST /api/v1/solve`。除 `constraints`、`limit` 外，還可傳 `offset`、`fixedCharacters`、`poolLimit`、`poolOffsets`；回應包含 `pools`、`pendingPools` 與 `nextCursor`。
 
 ## 8. 常見問題
 
-### 為什麼設定偏好後順序沒有變？
+### 為什麼某些字標示待確認？
 
-目前尚未實作 soft preference 與 ranking。結果順序主要來自輸入候選字的順序及笛卡兒組合順序。
+CNS 原始資料沒有康熙筆畫與五行判定。這些字在沒設定對應條件時仍會出現在探索池；設定條件後會列在 `pendingPools`，等待可追溯資料來源。
 
 ### 為什麼候選字完全沒有出現？
 
@@ -283,15 +287,13 @@ Constraint 或 Character 的 Zod 驗證失敗時，回傳：
 
 ## 9. 目前限制
 
-- 沒有 UI、可部署 API、資料庫或內建候選字庫。
-- 沒有分數、音韻、字義、熱門度、風格排序與來源證據。
+- 康熙筆畫、五行、字義、熱門度與風格資料仍只有已審核 fixture 的局部覆蓋。
 - 沒有無解診斷或經重跑驗證的放寬建議。
 - 沒有姓名分析、收藏、比較或分享。
-- 沒有分頁／cursor；所有位置組合會先在記憶體建立，大型字庫可能耗用大量記憶體。
+- 組合結果與候選池支援分頁；不會為完整 CNS 字庫建立數十億筆組合陣列。
 - `limit` 與完整 request body 邊界尚未嚴格驗證。
-- `hardConstraintMatches` 受 `limit` 截斷，不能當作完整命中總數。
+- 私用區外字目前不在字庫範圍內，需另外處理字型與識別。
 - 不會自動排除名字重複字。
 - 不應把目前結果解讀為可登記保證、吉凶判定或人生預測。
 
 完整的計畫符合性與待辦優先順序請參閱 `docs/implementation-review.md`。
-

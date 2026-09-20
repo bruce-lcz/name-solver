@@ -46,7 +46,7 @@ export interface SolveResponse {
   counts: StageCounts;
 }
 
-function checkCharacter(
+export function checkCharacter(
   character: Character,
   position: number,
   constraint: PositionConstraint,
