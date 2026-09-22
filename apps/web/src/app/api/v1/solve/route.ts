@@ -7,6 +7,11 @@ export interface SolveRequestBody {
   constraints: unknown;
   characters?: unknown[];
   limit?: number;
+  offset?: number;
+  fixedCharacters?: Array<string | null>;
+  poolLimit?: number;
+  poolOffsets?: number[];
+  poolStatus?: "eligible" | "pending";
 }
 
 type SolveApiResponse =
@@ -17,7 +22,7 @@ type SolveApiResponse =
 export function postSolve(body: SolveRequestBody): SolveApiResponse {
   try {
     const request = solveRequestSchema.parse(body);
-    const result = solveName(request.constraints, request.characters, request.limit);
+    const result = solveName(request.constraints, request.characters, request.limit, request);
     return { status: 200, body: result };
   } catch (error) {
     if (error instanceof ZodError) {

@@ -88,7 +88,12 @@ export type PositionConstraint = z.infer<typeof positionConstraintSchema>;
 export const solveRequestSchema = z.object({
   constraints: constraintsV1Schema,
   characters: z.array(z.unknown()).optional(),
-  limit: z.number().int().min(1).max(100).default(20)
+  limit: z.number().int().min(1).max(100).default(20),
+  offset: z.number().int().min(0).default(0),
+  fixedCharacters: z.array(hanCharacter.nullable()).optional(),
+  poolLimit: z.number().int().min(1).max(100).default(24),
+  poolOffsets: z.array(z.number().int().min(0)).optional(),
+  poolStatus: z.enum(["eligible", "pending"]).default("eligible")
 }).strict();
 
 export function isStrokeMatch(strokes: number, filter: z.infer<typeof strokeFilterSchema> | undefined): boolean {

@@ -3,4 +3,24 @@ node_modules/
 coverage/
 data/**/*.report.json
 *.tsbuildinfo
-.next-dev*.log
+
+# Local environment and secrets
+.env
+.env.*
+!.env.example
+
+# Build, bundler, and local tool caches
+dist/
+build/
+.turbo/
+.cache/
+.vite/
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+
+# OS metadata
+.DS_Store
+Thumbs.db

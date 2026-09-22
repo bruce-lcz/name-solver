@@ -15,6 +15,7 @@
     "dev": "node ./node_modules/next/dist/bin/next dev apps/web --webpack",
     "web:build": "node ./node_modules/next/dist/bin/next build apps/web --turbopack",
     "pipeline:fixture": "node --experimental-strip-types packages/data-pipeline/src/cli.ts",
+    "pipeline:cns": "node --experimental-strip-types packages/data-pipeline/src/import-cns.ts",
     "crawl:cns": "node --experimental-strip-types packages/data-pipeline/src/crawl-cli.ts",
     "test": "node ./node_modules/vitest/vitest.mjs run",
     "test:watch": "node ./node_modules/vitest/vitest.mjs"
